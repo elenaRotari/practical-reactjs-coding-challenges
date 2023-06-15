@@ -19,17 +19,18 @@ type state = {
 const PasswordGenerator = () => {
   const [passwordLength, setPasswordLength] = useState<number>(8)
   const [password, setPassword] = useState<state>({
-    data: 'B95hQL$%',
+    data: 'password',
     upper: false,
     lower: true,
     numbers: false,
     specialChars: false,
-    isShort: passwordLength < 8,
+    isShort: false,
   })
 
   const onChangePasswordLength = (value: number | number[]) => {
     setPasswordLength(value as number)
-    setPassword((prev) => (prev = { ...prev, isShort: passwordLength < 8 }))
+
+    setPassword((prev) => (prev = { ...prev, isShort: value < 8 }))
   }
   const letters: string = 'abcdefghijklmnopqrstuvwxyz'
   const lettersCap: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -67,13 +68,11 @@ const PasswordGenerator = () => {
       password.specialChars,
     ].filter((el) => el).length
 
-    return strogness === 2
+    return strogness === 2 || strogness === 1
       ? { text: 'Weak', color: 'red' }
       : strogness === 3
       ? { text: 'Medium', color: 'orange' }
-      : strogness === 4
-      ? { text: 'Hard', color: 'green' }
-      : { text: 'To Short', color: 'red' }
+      : { text: 'Hard', color: 'green' }
   }
   useEffect(() => {
     if (!password.upper && !password.numbers && !password.specialChars) {
