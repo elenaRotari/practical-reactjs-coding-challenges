@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import passwordGif from '../../assets/gif/password.gif'
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
 import { ReactComponent as Refresh } from '../../assets/icons/refresh.svg'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import Checkbox from '../Checkbox'
 import 'rc-slider/assets/index.css'
 import './index.css'
@@ -14,6 +15,7 @@ type state = {
   numbers: boolean
   specialChars: boolean
   isShort: boolean
+  copied: boolean
 }
 
 const PasswordGenerator = () => {
@@ -25,6 +27,7 @@ const PasswordGenerator = () => {
     numbers: false,
     specialChars: false,
     isShort: false,
+    copied: false,
   })
 
   const onChangePasswordLength = (value: number | number[]) => {
@@ -96,9 +99,14 @@ const PasswordGenerator = () => {
           <input type="text" placeholder="your password" value={password.data} />
           <Refresh onClick={generatePass} />
         </div>
-        <button className="copy-btn">
-          <Copy /> Copy
-        </button>
+        <CopyToClipboard text={password.data}>
+          <button
+            className="copy-btn"
+            onCopy={() => setPassword((prev) => (prev = { ...prev, copied: true }))}
+          >
+            <Copy /> Copy
+          </button>
+        </CopyToClipboard>
       </div>
       <span className="fw-500" style={{ color: checkStrogness().color }}>
         {password.isShort ? 'To Short' : checkStrogness().text}
